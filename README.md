@@ -98,4 +98,4 @@ Twitter: [@codedungeon](http://twitter.com/codedungeon)
 
 Website: [codedungeon.org](http://codedungeon.org)
 
-Inspired By: [jamarzka/gulp-phplint] (https://github.com/jamarzka/gulp-phplint)
+Inspired By: [jamarzka/gulp-phplint](https://github.com/jamarzka/gulp-phplint)
