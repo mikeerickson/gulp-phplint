@@ -3,7 +3,13 @@ PHPLint plugin for gulp 3
 
 ## Installation
 
-First, install `gulp-phplint` as a development dependency:
+Install `phplint` service (installed globally)
+
+```shell
+npm i -g phplint
+```
+
+Install `gulp-phplint` as a development dependency to your project (plugin should be installed for each project)
 
 ```shell
 npm install --save-dev gulp-phplint
@@ -34,12 +40,12 @@ gulp.task('phplint', function() {
 
 ### phplint(phpunitpath,options)
 
-#### phpunitpath
+#### phplint path
 
 Type: `String`
 
-The path to the desired PHPLint binary
-- If not supplied, the default path will be `./vendor/bin/phplint`
+Path to `php` binary
+- If not supplied, the default php path will be used
 
 #### options.debug
 Type:    `Boolean`
@@ -75,13 +81,11 @@ Displays status lines as follows
   - red for failing tests
   - yellow for tests which have `debug` property enabled (will also display red, green status)
 
+#### skipPassedFiles
+Type:    `Boolean`
+Default: `false`
 
-
-### PHPLint Options
-
-In addition to plugin options, the following PHPLint specific options may be configured.  For more information (and default values), visit the help supplied by PHPUnit
-
-$ phplint --help 
+Suppress reporting files which dont have syntax errors (passed files)
 
 
 ## Credits
@@ -93,3 +97,5 @@ E-Mail: [codedungeon@gmail.com](mailto:codedungeon@gmail.com)
 Twitter: [@codedungeon](http://twitter.com/codedungeon)
 
 Website: [codedungeon.org](http://codedungeon.org)
+
+Inspired By: [jamarzka/gulp-phplint] (https://github.com/jamarzka/gulp-phplint)

@@ -4,20 +4,23 @@
 
 'use strict';
 
-var map      = require('map-stream');
-var	gutil    = require('gulp-util');
-var	os       = require('os');
-var	exec     = require('child_process').exec;
-var msg      = require('gulp-messenger');
 var _        = require('lodash');
-var notifier = require('node-notifier');
+var gutil    = require('gulp-util');
+var msg      = require('gulp-messenger');
+var chalk    = require('gulp-messenger').chalk;
 var utils    = require('./src/utils.js');
-var chalk    = msg.chalk;
+var through  = require('through2');
+var exec     = require('child_process').execFile;
 
-module.exports = function(command, opt) {
+msg.init({timestamp: true, logToFile: false});
 
-	var cmd      = '';
-	var launched = false;
+var phplintPlugin = function(command, opt) {
+
+	if ( typeof command !== 'undefined') {
+		if (typeof command !== 'string') {
+			throw new gutil.PluginError('gulp-phplint', 'Parameter 1 must be path to php command, or empty string');
+		}
+	}
 
 	// Assign default options if one is not supplied
 	opt = opt || {};
@@ -32,101 +35,103 @@ module.exports = function(command, opt) {
 		dryRun:             false,
 		notify:             true,
 		statusLine:         true,
-
+		skipPassedFiles:    true
 	};
+
 	opt = _.defaults( opt, defaultOptions );
 
-	// If path to phplint bin not supplied, use default vendor/bin path
-	if (!command) {
-		command = './vendor/bin/phpunit';
+	var phpCmd = command || 'php';
+	var cmd    = phpCmd;
+	if ( opt.debug ) { cmd += ' --debug';}
 
-		// Use the backslashes on Windows
-		if (os.platform() === 'win32') {
-			command = command.replace(/[/]/g, '\\');
+	// append debug code if switch enabled
+	if ((opt.debug) || (opt.dryRun)) {
+		var debugCmd = cmd.replace('php', 'phplint');
+		if(opt.dryRun) {
+			console.log(chalk.green('\n       *** Dry Run Cmd: ' + debugCmd  + ' ***\n'));
+		} else {
+			console.log(chalk.yellow('\n       *** Debug Cmd: ' + debugCmd  + ' ***\n'));
 		}
-	} else if (typeof command !== 'string') {
-		throw new gutil.PluginError('gulp-phplint', 'Command Not Found: PHPLint');
 	}
 
+	var result = through.obj(function(file, enc, callback) {
 
-	return map( function(file, cb) {
-		// First file triggers the command, so other files does not matter
-		if (launched) {
-			return cb(null, file);
-		}
-		launched = true;
+		// had to do something with encoding parameter so jshint wont throw error
+		enc = '';
 
-		if (opt.debug)              { cmd += ' --debug'; }
-
-		// construct command
-		cmd = command + cmd;
-		if ( opt.clear ) {
-			cmd = 'clear && ' + cmd;
+		if (file.isNull()) {
+			return callback(null, file);
 		}
 
-		// append debug code if switch enabled
-		if ((opt.debug) || (opt.dryRun)) {
-			if(opt.dryRun) {
-				console.log(chalk.green('\n\n       *** Dry Run Cmd: ' + cmd  + ' ***\n'));
-			} else {
-				console.log(chalk.yellow('\n\n       *** Debug Cmd: ' + cmd  + ' ***\n'));
-			}
-		}
+		if ( ! opt.dryRun ) {
+			exec(phpCmd, ['-l', file.path], function(error, stdout, stderr) {
+				var report = {
+					error: false,
+				};
 
-		if( ! opt.dryRun ) {
-
-			exec(cmd, function (error, stdout, stderr) {
-
-				msg.success('PHPLint Execution Successful...');
-
-				if (!opt.silent && stderr) {
-					msg.error(stderr);
-				}
-
-				if (!opt.silent) {
-					// Trim trailing cr-lf
-					stdout = stdout.trim();
-					if (stdout) {
-						console.log(stdout);
-					}
-				}
-
-				// call user callback if error occurs
 				if (error) {
-					if ( opt.statusLine ) {
-						console.log('\n');
-						msg.chalkline.red();
+
+					var match = stderr.match(/(.+?):  (.+?) in (.+?) on line (\d+)/i);
+
+					if (match) {
+						report.rule     = match[1];
+						report.message  = match[2];
+						report.filename = match[3];
+						report.line     = match[4];
+					} else {
+						report.message = stderr;
 					}
-					if (opt.debug) {
-						msg.error(error);
-						msg.chalkline.yellow();
-					}
-					cb(error, file);
-				} else {
-					if ( opt.statusLine ) {
-						console.log('\n');
-						if ( opt.debug ) {
-							msg.chalkline.yellow();
-						} else {
-							msg.chalkline.green();
+
+					// using console here so extra timestamp value is not sent to console
+					// (due to default timestamp enabled)
+					var errMsg;
+					if ( stderr.length > 0) {
+						errMsg = stderr;
+					} else {
+						if ( stdout.length > 0) {
+							errMsg = stdout;
 						}
 					}
-					cb(null, file);
+					report.error = true;
+
+					// if notify flag enabled, show notification
+					if ( opt.notify ) {
+						var options = utils.notifyOptions(error ? 'fail' : 'pass', {taskName: 'PHPLint'});
+						var notificationMsg = '[' + options.title + ']';
+						if ( error ) {
+							notificationMsg += ' ' + file.path;
+							msg.error(notificationMsg);
+							console.log(msg.chalk.red('---' + errMsg));
+						} else {
+							if ( ! opt.skipPassedFiles ) {
+								notificationMsg += ' ' + file.path;
+								msg.success(notificationMsg);
+							}
+						}
+					}
+
 				}
 
+				file.phplintReport = report;
 
-				// if notify flag enabled, show notification
-				if ( opt.notify ) {
-					var options = utils.notifyOptions(error ? 'fail' : 'pass',{taskName: 'PHPLint'});
-					notifier.notify(options);
-				}
+				callback(null, file);
 
-			}).stdout.on('data', function(data) {
-				var str = data.toString();
-				cb(null, str);
 			});
+
+		} else {
+			if ( opt.statusLine ) { msg.chalkline.yellow(); }
 		}
 
 	});
+
+	return result;
+
 };
+
+
+// Attach reporters and export plugin
+phplintPlugin.reporter = require('./src/reporters');
+module.exports = phplintPlugin;
+
+
 
