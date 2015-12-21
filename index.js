@@ -16,6 +16,9 @@ msg.init({timestamp: true, logToFile: false});
 
 var phplintPlugin = function(command, opt) {
 
+	var options         = {};
+	var notificationMsg = '';
+
 	if ( typeof command !== 'undefined') {
 		if (typeof command !== 'string') {
 			throw new gutil.PluginError('gulp-phplint', 'Parameter 1 must be path to php command, or empty string');
@@ -35,8 +38,9 @@ var phplintPlugin = function(command, opt) {
 		dryRun:             false,
 		notify:             true,
 		statusLine:         true,
-		skipPassedFiles:    true
+		skipPassedFiles:    false
 	};
+
 
 	opt = _.defaults( opt, defaultOptions );
 
@@ -54,7 +58,7 @@ var phplintPlugin = function(command, opt) {
 		}
 	}
 
-	var result = through.obj(function(file, enc, callback) {
+	return through.obj(function(file, enc, callback) {
 
 		// had to do something with encoding parameter so jshint wont throw error
 		enc = '';
@@ -96,8 +100,8 @@ var phplintPlugin = function(command, opt) {
 
 					// if notify flag enabled, show notification
 					if ( opt.notify ) {
-						var options = utils.notifyOptions(error ? 'fail' : 'pass', {taskName: 'PHPLint'});
-						var notificationMsg = '[' + options.title + ']';
+						options = utils.notifyOptions(error ? 'fail' : 'pass', {taskName: 'PHPLint'});
+						notificationMsg = '[' + options.title + ']';
 						if ( error ) {
 							notificationMsg += ' ' + file.path;
 							msg.error(notificationMsg);
@@ -109,7 +113,13 @@ var phplintPlugin = function(command, opt) {
 							}
 						}
 					}
-
+				} else {
+					if ( ! opt.skipPassedFiles ) {
+						options = utils.notifyOptions(error ? 'fail' : 'pass', {taskName: 'PHPLint'});
+						notificationMsg = '[' + options.title + ']';
+						notificationMsg += ' ' + file.path;
+						msg.success(notificationMsg);
+					}
 				}
 
 				file.phplintReport = report;
@@ -124,7 +134,6 @@ var phplintPlugin = function(command, opt) {
 
 	});
 
-	return result;
 
 };
 
