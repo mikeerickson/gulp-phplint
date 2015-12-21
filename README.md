@@ -77,9 +77,9 @@ Default: `true`
 
 Displays status lines as follows
 
-  - green for passing tests
-  - red for failing tests
-  - yellow for tests which have `debug` property enabled (will also display red, green status)
+  - green for passing files
+  - red for failing files
+  - yellow for execution which have `debug` property enabled (will also display red, green status)
 
 #### skipPassedFiles
 Type:    `Boolean`
