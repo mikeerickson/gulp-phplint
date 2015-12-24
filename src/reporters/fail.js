@@ -21,6 +21,7 @@ module.exports = function(file) {
         chalk.yellow(report.line) + ' ' + report.message;
     }
 
-    this.emit('error', new gutil.PluginError('gulp-phplint', message));
+    console.log(message);
+
   }
 };
