@@ -103,13 +103,17 @@ var phplintPlugin = function(command, opt) {
 						options = utils.notifyOptions(error ? 'fail' : 'pass', {taskName: 'PHPLint'});
 						notificationMsg = '[' + options.title + ']';
 						if ( error ) {
-							notificationMsg += ' ' + file.path;
-							msg.error(notificationMsg);
-							console.log(msg.chalk.red('---' + errMsg));
+							if ( ! opt.silent ) {
+								notificationMsg += ' ' + file.path;
+								msg.error(notificationMsg);
+								console.log(msg.chalk.red('---' + errMsg));
+							}
 						} else {
 							if ( ! opt.skipPassedFiles ) {
-								notificationMsg += ' ' + file.path;
-								msg.success(notificationMsg);
+								if ( ! opt.silent ) {
+									notificationMsg += ' ' + file.path;
+									msg.success(notificationMsg);
+								}
 							}
 						}
 					}
