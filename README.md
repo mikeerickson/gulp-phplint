@@ -35,6 +35,30 @@ gulp.task('phplint', function() {
 });
 ```
 
+// option 2: default format using the `fail` reporter
+``` javascript
+gulp.task('phplint', function() {
+  return gulp.src(['./src/AppBundle/**/*.php'])
+    .pipe(phplint('', opts))
+    .pipe(phplint.reporter('fail'));
+});
+```
+
+// option 3: custom src files and custom reporter
+
+``` javascript
+gulp.task('phplint:custom', function () {
+  return gulp.src(['./src/AppBundle/**/*.php'])
+    .pipe(phplint('',opts))
+    .pipe(phplint.reporter(function(file){
+      var report = file.phplintReport || {};
+      if (report.error) {
+        console.error(report.message+' on line '+report.line+' of '+report.filename);
+      }
+    }));
+});
+```
+
 
 ## API
 
