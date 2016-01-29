@@ -13,15 +13,20 @@
     "through2": "2.0.0"
   },
   "devDependencies": {
+    "gulp": "^3.8.0",
+    "gulp-messenger": "0.9.0",
+    "gulp-mocha": "^0.5.2",
+    "gulp-shell": "^0.2.9",
     "jshint": "^2.5.3",
     "mocha": "^1.21.4",
-    "should": "^4.0.4",
-    "gulp": "^3.8.0",
-    "gulp-mocha": "^0.5.2",
-    "gulp-shell": "^0.2.9"
+    "mocha-unfunk-reporter": "0.4.0",
+    "node-notifier": "4.4.0",
+    "require-dir": "0.3.0",
+    "should": "^4.0.4"
   },
   "scripts": {
-    "test": "mocha --reporter spec && jshint ./*.js && jshint ./test/*.js"
+    "test": "mocha --reporter spec && jshint ./*.js && jshint ./test/*.js",
+    "test-reporter": "mocha --reporter mocha-unfunk-reporter && jshint ./*.js && jshint ./test/*.js"
   },
   "repository": {
     "type": "git",
