@@ -22,6 +22,6 @@ module.exports = function(file) {
     }
 
     console.log(message);
-
+    process.exit(1);
   }
 };
