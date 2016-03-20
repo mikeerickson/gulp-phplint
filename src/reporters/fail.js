@@ -1,7 +1,8 @@
 'use strict';
 
-var gutil = require('gulp-util');
-var chalk = require('chalk');
+var gutil    = require('gulp-util');
+var chalk    = require('chalk');
+var exitcode = require('exit-code');
 
 /**
  * Returns the fail reporter
@@ -22,6 +23,6 @@ module.exports = function(file) {
     }
 
     console.log(message);
-
+    process.exitCode = 1;
   }
 };
