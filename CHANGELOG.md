@@ -1,5 +1,9 @@
 ## Changelog
 
+- 0.3.0:
+  - Updated distribution dependencies to include `exit-code` module
+  - Updated distribution dependencies to include `escape-string-regexp` module
+
 - 0.2.0:
   - Merged PR [https://github.com/mikeerickson/gulp-phplint/pull/4](https://github.com/mikeerickson/gulp-phplint/pull/4)
   - Replaced `jshint` with `eslint`
