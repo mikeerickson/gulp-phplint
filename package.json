@@ -21,7 +21,7 @@
     "require-dir": "0.3.0"
   },
   "scripts": {
-    "test": "mocha --reporter spec && npm run eslint",
+    "test": "mocha",
     "test-reporter": "mocha --reporter mocha-unfunk-reporter && npm run eslint",
     "eslint": "eslint \"./src/**/*.js\""
   },
