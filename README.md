@@ -12,7 +12,7 @@ npm i -g phplint
 Install `gulp-phplint` as a development dependency to your project (plugin should be installed for each project)
 
 ```shell
-npm install --save-dev gulp-phplint
+npm i -S gulp-phplint
 ```
 
 
