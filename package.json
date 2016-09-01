@@ -1,6 +1,6 @@
 {
   "name": "gulp-phplint",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "PHPLint plugin for Gulp",
   "main": "index.js",
   "dependencies": {
@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "chai": "3.5.0",
+    "escape-string-regexp": "1.0.5",
     "exit-code": "1.0.2",
     "mocha": "3.0.2",
     "mocha-unfunk-reporter": "0.4.0",
