@@ -11,7 +11,7 @@ var exitcode = require('exit-code');
  *
  * @returns {Function}
  */
-module.exports = function(file) {
+module.exports = function (file) {
   var report = file.phplintReport || {};
 
   if (report.error) {

@@ -15,7 +15,7 @@ var defaultReporter = require('./default');
  * @param {Object} options Custom options object that will be passed to a reporter.
  * @returns {Function}
  */
-module.exports = function(reporter) {
+module.exports = function (reporter) {
   reporter = reporter || defaultReporter;
 
   if (reporter === 'fail') {
@@ -29,7 +29,7 @@ module.exports = function(reporter) {
     this.emit('error', new gutil.PluginError('gulp-phplint', 'Invalid reporter'));
   }
 
-  return through.obj(function(file, enc, callback) {
+  return through.obj(function (file, enc, callback) {
     reporter(file);
 
     return callback(null, file);
