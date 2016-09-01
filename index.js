@@ -75,7 +75,8 @@ var phplintPlugin = function(command, opt) {
 
 				if (error) {
 
-					var match = stderr.match(/(.+?):  (.+?) in (.+?) on line (\d+)/i);
+					var errMsg = stderr || stdout;
+					var match = errMsg.match(/(.+?):\s+(.+?) in (.+?) on line (\d+)/im);
 
 					if (match) {
 						report.rule     = match[1];
@@ -83,19 +84,9 @@ var phplintPlugin = function(command, opt) {
 						report.filename = match[3];
 						report.line     = match[4];
 					} else {
-						report.message = stderr;
+						report.message = errMsg;
 					}
 
-					// using console here so extra timestamp value is not sent to console
-					// (due to default timestamp enabled)
-					var errMsg;
-					if ( stderr.length > 0) {
-						errMsg = stderr;
-					} else {
-						if ( stdout.length > 0) {
-							errMsg = stdout;
-						}
-					}
 					report.error = true;
 
 					// if notify flag enabled, show notification
@@ -145,6 +136,3 @@ var phplintPlugin = function(command, opt) {
 // Attach reporters and export plugin
 phplintPlugin.reporter = require('./src/reporters');
 module.exports = phplintPlugin;
-
-
-
