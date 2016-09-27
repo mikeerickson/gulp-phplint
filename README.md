@@ -22,6 +22,7 @@ After you have installed plugin, reference in to your `gulpfile.js`:
 
 ```javascript
 var phplint = require('gulp-phplint');
+```
 
 // option 1: default format, equivalent to using `phplint` in command line (no options)
 
@@ -36,6 +37,7 @@ gulp.task('phplint', function() {
 ```
 
 // option 2: default format using the `fail` reporter
+
 ``` javascript
 gulp.task('phplint', function() {
   return gulp.src(['./src/AppBundle/**/*.php'])
