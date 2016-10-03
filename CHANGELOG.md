@@ -1,5 +1,7 @@
 ## Changelog
 
+- 0.3.3:
+  - Updated readme typos [Issue 16](https://github.com/mikeerickson/gulp-phplint/issues/16)
 - 0.3.0:
   - Updated distribution dependencies to include `exit-code` module
   - Updated distribution dependencies to include `escape-string-regexp` module

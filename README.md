@@ -28,7 +28,7 @@ var phplint = require('gulp-phplint');
 
 ``` javascript
 var gulp    = require('gulp');
-var phpunit = require('gulp-phplint');
+var phplint = require('gulp-phplint');
 
 gulp.task('phplint', function() {
   gulp.src('')
@@ -64,7 +64,7 @@ gulp.task('phplint:custom', function () {
 
 ## API
 
-### phplint(phpunitpath,options)
+### phplint(phplintpath,options)
 
 #### phplint path
 
