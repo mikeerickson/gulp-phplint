@@ -1,6 +1,5 @@
 'use strict';
 
-var gutil    = require('gulp-util');
 var chalk    = require('chalk');
 var exitcode = require('exit-code');
 

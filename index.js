@@ -4,13 +4,13 @@
 
 'use strict';
 
-var _        = require('lodash');
-var gutil    = require('gulp-util');
-var msg      = require('gulp-messenger');
-var chalk    = require('chalk');
-var utils    = require('./src/utils.js');
-var through  = require('through2');
-var exec     = require('child_process').execFile;
+var _           = require('lodash');
+var PluginError = require('plugin-error');
+var msg         = require('gulp-messenger');
+var chalk       = require('chalk');
+var utils       = require('./src/utils.js');
+var through     = require('through2');
+var exec        = require('child_process').execFile;
 
 msg.init({timestamp: true, logToFile: false});
 
@@ -21,7 +21,7 @@ var phplintPlugin = function(command, opt) {
 
 	if ( typeof command !== 'undefined') {
 		if (typeof command !== 'string') {
-			throw new gutil.PluginError('gulp-phplint', 'Parameter 1 must be path to php command, or empty string');
+			throw new PluginError('gulp-phplint', 'Parameter 1 must be path to php command, or empty string');
 		}
 	}
 
