@@ -1,6 +1,6 @@
 'use strict';
 
-var gutil = require('gulp-util');
+var PluginError = require('plugin-error');
 var through = require('through2');
 
 var failReporter = require('./fail');
@@ -26,7 +26,7 @@ module.exports = function (reporter) {
 
   // Check for a valid reporter
   if (typeof reporter !== 'function') {
-    this.emit('error', new gutil.PluginError('gulp-phplint', 'Invalid reporter'));
+    this.emit('error', new PluginError('gulp-phplint', 'Invalid reporter'));
   }
 
   return through.obj(function (file, enc, callback) {

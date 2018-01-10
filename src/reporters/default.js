@@ -1,7 +1,7 @@
 'use strict';
 
-var gutil = require('gulp-util');
-var chalk = require('chalk');
+var fancyLog = require('fancy-log');
+var chalk    = require('chalk');
 
 /**
  * Returns the defalt reporter
@@ -21,7 +21,7 @@ module.exports = function (file) {
         chalk.yellow(report.line) + ' ' + report.message;
     }
 
-    gutil.log(message);
+    fancyLog(message);
   }
 
   return;
