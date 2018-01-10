@@ -3,10 +3,7 @@
 # When adding rules, be sure to sort them, e.g. vim :'<,'>sort
 root: true
 parser: esprima
-eslintConfig:
-  env:
-    browser: true
-    node: true
+
 rules:
   ##### Possible Errors #####
   no-console: 0 # 1

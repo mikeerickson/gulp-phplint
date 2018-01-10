@@ -16,118 +16,118 @@ msg.init({timestamp: true, logToFile: false});
 
 var phplintPlugin = function(command, opt) {
 
-	var options         = {};
-	var notificationMsg = '';
+  var options         = {};
+  var notificationMsg = '';
 
-	if ( typeof command !== 'undefined') {
-		if (typeof command !== 'string') {
-			throw new PluginError('gulp-phplint', 'Parameter 1 must be path to php command, or empty string');
-		}
-	}
+  if ( typeof command !== 'undefined') {
+    if (typeof command !== 'string') {
+      throw new PluginError('gulp-phplint', 'Parameter 1 must be path to php command, or empty string');
+    }
+  }
 
-	// Assign default options if one is not supplied
-	opt = opt || {};
+  // Assign default options if one is not supplied
+  opt = opt || {};
 
-	// merge default options and user supplied options
-	var defaultOptions = {
+  // merge default options and user supplied options
+  var defaultOptions = {
 
-		// plugin specific options (not associated with phpunit options)
-		silent:             false,
-		debug:              false,
-		clear:              false,
-		dryRun:             false,
-		notify:             true,
-		statusLine:         true,
-		skipPassedFiles:    false
-	};
+    // plugin specific options (not associated with phpunit options)
+    silent:             false,
+    debug:              false,
+    clear:              false,
+    dryRun:             false,
+    notify:             true,
+    statusLine:         true,
+    skipPassedFiles:    false
+  };
 
 
-	opt = _.defaults( opt, defaultOptions );
+  opt = _.defaults( opt, defaultOptions );
 
-	var phpCmd = command || 'php';
-	var cmd    = phpCmd;
-	if ( opt.debug ) { cmd += ' --debug';}
+  var phpCmd = command || 'php';
+  var cmd    = phpCmd;
+  if ( opt.debug ) { cmd += ' --debug';}
 
-	// append debug code if switch enabled
-	if ((opt.debug) || (opt.dryRun)) {
-		var debugCmd = cmd.replace('php', 'phplint');
-		if(opt.dryRun) {
-			console.log(chalk.green('\n       *** Dry Run Cmd: ' + debugCmd  + ' ***\n'));
-		} else {
-			console.log(chalk.yellow('\n       *** Debug Cmd: ' + debugCmd  + ' ***\n'));
-		}
-	}
+  // append debug code if switch enabled
+  if ((opt.debug) || (opt.dryRun)) {
+    var debugCmd = cmd.replace('php', 'phplint');
+    if(opt.dryRun) {
+      console.log(chalk.green('\n       *** Dry Run Cmd: ' + debugCmd  + ' ***\n'));
+    } else {
+      console.log(chalk.yellow('\n       *** Debug Cmd: ' + debugCmd  + ' ***\n'));
+    }
+  }
 
-	return through.obj(function(file, enc, callback) {
+  return through.obj(function(file, enc, callback) {
 
-		// had to do something with encoding parameter so jshint wont throw error
-		enc = '';
+    // had to do something with encoding parameter so jshint wont throw error
+    enc = '';
 
-		if (file.isNull()) {
-			return callback(null, file);
-		}
+    if (file.isNull()) {
+      return callback(null, file);
+    }
 
-		if ( ! opt.dryRun ) {
-			exec(phpCmd, ['-l', file.path], function(error, stdout, stderr) {
-				var report = {
-					error: false,
-				};
+    if ( ! opt.dryRun ) {
+      exec(phpCmd, ['-l', file.path], function(error, stdout, stderr) {
+        var report = {
+          error: false,
+        };
 
-				if (error) {
+        if (error) {
 
-					var errMsg = stderr || stdout;
-					var match = errMsg.match(/(.+?):\s+(.+?) in (.+?) on line (\d+)/im);
+          var errMsg = stderr || stdout;
+          var match = errMsg.match(/(.+?):\s+(.+?) in (.+?) on line (\d+)/im);
 
-					if (match) {
-						report.rule     = match[1];
-						report.message  = match[2];
-						report.filename = match[3];
-						report.line     = match[4];
-					} else {
-						report.message = errMsg;
-					}
+          if (match) {
+            report.rule     = match[1];
+            report.message  = match[2];
+            report.filename = match[3];
+            report.line     = match[4];
+          } else {
+            report.message = errMsg;
+          }
 
-					report.error = true;
+          report.error = true;
 
-					// if notify flag enabled, show notification
-					if ( opt.notify ) {
-						options = utils.notifyOptions(error ? 'fail' : 'pass', {taskName: 'PHPLint'});
-						notificationMsg = '[' + options.title + ']';
-						if ( error ) {
-							if ( ! opt.silent ) {
-								notificationMsg += ' ' + file.path;
-								msg.error(notificationMsg);
-								console.log(msg.chalk.red('---' + errMsg));
-							}
-						} else {
-							if ( ! opt.skipPassedFiles ) {
-								if ( ! opt.silent ) {
-									notificationMsg += ' ' + file.path;
-									msg.success(notificationMsg);
-								}
-							}
-						}
-					}
-				} else {
-					if ( ! opt.skipPassedFiles ) {
-						options = utils.notifyOptions(error ? 'fail' : 'pass', {taskName: 'PHPLint'});
-						notificationMsg = '[' + options.title + ']';
-						notificationMsg += ' ' + file.path;
-						msg.success(notificationMsg);
-					}
-				}
+          // if notify flag enabled, show notification
+          if ( opt.notify ) {
+            options = utils.notifyOptions(error ? 'fail' : 'pass', {taskName: 'PHPLint'});
+            notificationMsg = '[' + options.title + ']';
+            if ( error ) {
+              if ( ! opt.silent ) {
+                notificationMsg += ' ' + file.path;
+                msg.error(notificationMsg);
+                console.log(msg.chalk.red('---' + errMsg));
+              }
+            } else {
+              if ( ! opt.skipPassedFiles ) {
+                if ( ! opt.silent ) {
+                  notificationMsg += ' ' + file.path;
+                  msg.success(notificationMsg);
+                }
+              }
+            }
+          }
+        } else {
+          if ( ! opt.skipPassedFiles ) {
+            options = utils.notifyOptions(error ? 'fail' : 'pass', {taskName: 'PHPLint'});
+            notificationMsg = '[' + options.title + ']';
+            notificationMsg += ' ' + file.path;
+            msg.success(notificationMsg);
+          }
+        }
 
-				file.phplintReport = report;
+        file.phplintReport = report;
 
-				callback(null, file);
+        callback(null, file);
 
-			});
+      });
 
-		} else {
-			if ( opt.statusLine ) { msg.chalkline.yellow(); }
-		}
+    } else {
+      if ( opt.statusLine ) { msg.chalkline.yellow(); }
+    }
 
-	});
+  });
 
 
 };
