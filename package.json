@@ -1,6 +1,6 @@
-{
+
   "name": "gulp-phplint",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "description": "PHPLint plugin for Gulp",
   "main": "index.js",
   "dependencies": {
