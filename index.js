@@ -31,7 +31,7 @@ var phplintPlugin = function(command, opt) {
   // merge default options and user supplied options
   var defaultOptions = {
 
-    // plugin specific options (not associated with phpunit options)
+    // plugin specific options (not associated with phplint options)
     silent:             false,
     debug:              false,
     clear:              false,
