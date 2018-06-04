@@ -4,22 +4,20 @@
 
 'use strict';
 
-var _           = require('lodash');
+var _ = require('lodash');
 var PluginError = require('plugin-error');
-var msg         = require('gulp-messenger');
-var chalk       = require('chalk');
-var utils       = require('./src/utils.js');
-var through     = require('through2');
-var exec        = require('child_process').execFile;
+var chalk = require('chalk');
+var utils = require('./src/utils.js');
+var through = require('through2');
+var exec = require('child_process').execFile;
 
-msg.init({timestamp: true, logToFile: false});
 
-var phplintPlugin = function(command, opt) {
+var phplintPlugin = function (command, opt) {
 
-  var options         = {};
+  var options = {};
   var notificationMsg = '';
 
-  if ( typeof command !== 'undefined') {
+  if (typeof command !== 'undefined') {
     if (typeof command !== 'string') {
       throw new PluginError('gulp-phplint', 'Parameter 1 must be path to php command, or empty string');
     }
@@ -32,33 +30,33 @@ var phplintPlugin = function(command, opt) {
   var defaultOptions = {
 
     // plugin specific options (not associated with phplint options)
-    silent:             false,
-    debug:              false,
-    clear:              false,
-    dryRun:             false,
-    notify:             true,
-    statusLine:         true,
-    skipPassedFiles:    false
+    silent: false,
+    debug: false,
+    clear: false,
+    dryRun: false,
+    notify: true,
+    statusLine: true,
+    skipPassedFiles: false
   };
 
 
-  opt = _.defaults( opt, defaultOptions );
+  opt = _.defaults(opt, defaultOptions);
 
   var phpCmd = command || 'php';
-  var cmd    = phpCmd;
-  if ( opt.debug ) { cmd += ' --debug';}
+  var cmd = phpCmd;
+  if (opt.debug) { cmd += ' --debug'; }
 
   // append debug code if switch enabled
   if ((opt.debug) || (opt.dryRun)) {
     var debugCmd = cmd.replace('php', 'phplint');
-    if(opt.dryRun) {
-      console.log(chalk.green('\n       *** Dry Run Cmd: ' + debugCmd  + ' ***\n'));
+    if (opt.dryRun) {
+      console.log(chalk.green('\n       *** Dry Run Cmd: ' + debugCmd + ' ***\n'));
     } else {
-      console.log(chalk.yellow('\n       *** Debug Cmd: ' + debugCmd  + ' ***\n'));
+      console.log(chalk.yellow('\n       *** Debug Cmd: ' + debugCmd + ' ***\n'));
     }
   }
 
-  return through.obj(function(file, enc, callback) {
+  return through.obj(function (file, enc, callback) {
 
     // had to do something with encoding parameter so jshint wont throw error
     enc = '';
@@ -67,8 +65,8 @@ var phplintPlugin = function(command, opt) {
       return callback(null, file);
     }
 
-    if ( ! opt.dryRun ) {
-      exec(phpCmd, ['-l', file.path], function(error, stdout, stderr) {
+    if (!opt.dryRun) {
+      exec(phpCmd, ['-l', file.path], function (error, stdout, stderr) {
         var report = {
           error: false,
         };
@@ -79,10 +77,10 @@ var phplintPlugin = function(command, opt) {
           var match = errMsg.match(/(.+?):\s+(.+?) in (.+?) on line (\d+)/im);
 
           if (match) {
-            report.rule     = match[1];
-            report.message  = match[2];
+            report.rule = match[1];
+            report.message = match[2];
             report.filename = match[3];
-            report.line     = match[4];
+            report.line = match[4];
           } else {
             report.message = errMsg;
           }
@@ -90,30 +88,30 @@ var phplintPlugin = function(command, opt) {
           report.error = true;
 
           // if notify flag enabled, show notification
-          if ( opt.notify ) {
-            options = utils.notifyOptions(error ? 'fail' : 'pass', {taskName: 'PHPLint'});
+          if (opt.notify) {
+            options = utils.notifyOptions(error ? 'fail' : 'pass', { taskName: 'PHPLint' });
             notificationMsg = '[' + options.title + ']';
-            if ( error ) {
-              if ( ! opt.silent ) {
+            if (error) {
+              if (!opt.silent) {
                 notificationMsg += ' ' + file.path;
-                msg.error(notificationMsg);
-                console.log(msg.chalk.red('---' + errMsg));
+                console.log(chalk.red(notificationMsg));
+                console.log(chalk.red('---' + errMsg));
               }
             } else {
-              if ( ! opt.skipPassedFiles ) {
-                if ( ! opt.silent ) {
+              if (!opt.skipPassedFiles) {
+                if (!opt.silent) {
                   notificationMsg += ' ' + file.path;
-                  msg.success(notificationMsg);
+                  console.log(chalk.yellow(notificationMsg));
                 }
               }
             }
           }
         } else {
-          if ( ! opt.skipPassedFiles ) {
-            options = utils.notifyOptions(error ? 'fail' : 'pass', {taskName: 'PHPLint'});
+          if (!opt.skipPassedFiles) {
+            options = utils.notifyOptions(error ? 'fail' : 'pass', { taskName: 'PHPLint' });
             notificationMsg = '[' + options.title + ']';
             notificationMsg += ' ' + file.path;
-            msg.success(notificationMsg);
+            console.log(chalk.success(notificationMsg));
           }
         }
 
@@ -124,7 +122,7 @@ var phplintPlugin = function(command, opt) {
       });
 
     } else {
-      if ( opt.statusLine ) { msg.chalkline.yellow(); }
+      if (opt.statusLine) { }
     }
 
   });

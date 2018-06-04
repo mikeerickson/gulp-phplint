@@ -66,7 +66,7 @@ rules:
   array-bracket-spacing: 0 # 1 # fixable
   block-spacing: 1 # fixable
   brace-style: 0 # [1, 'stroustrup', {allowSingleLine: true}]
-  func-style: [1, 'declaration', {allowArrowFunctions: true}]
+  func-style: [0, 'declaration', {allowArrowFunctions: true}]
   # indent: [1, 'tab', {SwitchCase: 0}] # fixable
   indent: 0 # fixable
   key-spacing: 0 # 1
