@@ -8,11 +8,17 @@ Install `phplint` service (globally)
 ```shell
 npm i -g phplint
 ```
+```shell
+yarn global add phplint
+```
 
 Install `gulp-phplint` as a development dependency to your project (for each project)
 
 ```shell
 npm i -S gulp-phplint
+```
+```shell
+yarn add gulp-phplint -D
 ```
 
 
