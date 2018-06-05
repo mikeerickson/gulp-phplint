@@ -1,15 +1,15 @@
 # gulp-phplint
-PHPLint plugin for gulp 3
+PHPLint plugin for Gulp
 
 ## Installation
 
-Install `phplint` service (installed globally)
+Install `phplint` service (globally)
 
 ```shell
 npm i -g phplint
 ```
 
-Install `gulp-phplint` as a development dependency to your project (plugin should be installed for each project)
+Install `gulp-phplint` as a development dependency to your project (for each project)
 
 ```shell
 npm i -S gulp-phplint
@@ -18,15 +18,17 @@ npm i -S gulp-phplint
 
 ## Usage
 
-After you have installed plugin, reference in to your `gulpfile.js`:
+After you have installed the plugin, reference it in to your `gulpfile.js`:
 
 ```javascript
 var phplint = require('gulp-phplint');
 ```
 
-// option 1: default format, equivalent to using `phplint` in command line (no options)
+### Option 1
 
-``` javascript
+Default format. Equivalent to using `phplint` in command line (no options).
+
+```javascript
 var gulp    = require('gulp');
 var phplint = require('gulp-phplint');
 
@@ -36,22 +38,26 @@ gulp.task('phplint', function() {
 });
 ```
 
-// option 2: default format using the `fail` reporter
+### Option 2
+
+Default format using the `error` reporter.
 
 ``` javascript
 gulp.task('phplint', function() {
   return gulp.src(['./src/AppBundle/**/*.php'])
-    .pipe(phplint('', opts))
-    .pipe(phplint.reporter('fail'));
+    .pipe(phplint('', { /*opts*/ }))
+    .pipe(phplint.reporter('error'));
 });
 ```
 
-// option 3: custom src files and custom reporter
+### Option 3
+
+Custom src files and custom reporter.
 
 ``` javascript
 gulp.task('phplint:custom', function () {
   return gulp.src(['./src/AppBundle/**/*.php'])
-    .pipe(phplint('',opts))
+    .pipe(phplint('', { /*opts*/ }))
     .pipe(phplint.reporter(function(file){
       var report = file.phplintReport || {};
       if (report.error) {
@@ -64,54 +70,54 @@ gulp.task('phplint:custom', function () {
 
 ## API
 
-### phplint(phplintpath,options)
+### phplint(path, options)
 
-#### phplint path
+#### path
 
 Type: `String`
 
-Path to `php` binary
-- If not supplied, the default php path will be used
+Path to `php` binary.
+If not supplied, the default php path will be used.
 
 #### options.debug
 Type:    `Boolean`
 Default: `false`
 
-Debug mode enabled (enables --debug switch as well)
+Enable debug mode (enables --debug switch as well).
 
 #### options.clear
 Type:    `Boolean`
 Default: `false`
 
-Clear console before executing command
+Clear console before executing command.
 
 #### options.dryRun
 Type:    `Boolean`
 Default: `false`
 
-Executes dry run (doesn't actually execute tests, just echo command that would be executed)
+Simulates script execution. Doesn't actually execute tests, just echoes command that would be executed.
 
 #### options.notify
 Type:    `Boolean`
 Default: `true`
 
-Conditionally display notification (both console and growl where applicable)
+Conditionally display notification (both console and growl where applicable).
 
 #### options.statusLine
 Type:    `Boolean`
 Default: `true`
 
-Displays status lines as follows
+Displays status lines as follows:
 
   - green for passing files
   - red for failing files
-  - yellow for execution which have `debug` property enabled (will also display red, green status)
+  - yellow for an execution which has `debug` property enabled (will also display red and green statuses)
 
 #### skipPassedFiles
 Type:    `Boolean`
 Default: `false`
 
-Suppress reporting files which dont have syntax errors (passed files)
+Suppress reporting files which don't have syntax errors (files that passed linting).
 
 
 ## Credits
