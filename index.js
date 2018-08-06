@@ -111,7 +111,7 @@ var phplintPlugin = function (command, opt) {
             options = utils.notifyOptions(error ? 'fail' : 'pass', { taskName: 'PHPLint' });
             notificationMsg = '[' + options.title + ']';
             notificationMsg += ' ' + file.path;
-            console.log(chalk.success(notificationMsg));
+            console.log(chalk.green(notificationMsg));
           }
         }
 
