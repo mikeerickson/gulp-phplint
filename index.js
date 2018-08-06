@@ -89,7 +89,7 @@ var phplintPlugin = function (command, opt) {
 
           // if notify flag enabled, show notification
           if (opt.notify) {
-            options = utils.notifyOptions(error ? 'fail' : 'pass', { taskName: 'PHPLint' });
+            options = utils.notifyOptions(error ? 'fail' : 'pass', {taskName: 'PHPLint'});
             notificationMsg = '[' + options.title + ']';
             if (error) {
               if (!opt.silent) {
@@ -108,7 +108,7 @@ var phplintPlugin = function (command, opt) {
           }
         } else {
           if (!opt.skipPassedFiles) {
-            options = utils.notifyOptions(error ? 'fail' : 'pass', { taskName: 'PHPLint' });
+            options = utils.notifyOptions(error ? 'fail' : 'pass', {taskName: 'PHPLint'});
             notificationMsg = '[' + options.title + ']';
             notificationMsg += ' ' + file.path;
             console.log(chalk.green(notificationMsg));
